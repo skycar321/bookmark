@@ -1,0 +1,28 @@
+
+# 스트림셋 디렉토리 경로
+SDC_HOME="/data/sdc"
+GIT_HOME="/data/github/di-streamsets"
+
+# 1. runinfo 디렉토리 정리
+echo "runinfo 디렉토리 정리 중..."
+# pipelinestatehistory.json 파일의 민감한 정보만 제거
+find $GIT_HOME/runinfo -name "pipelinestatehistory.json" -type f -exec sed -i '/password\|secret\|credential\|token\|key\|auth/d' {} \;
+
+# 2. 스냅샷 디렉토리 정리
+echo "스냅샷 디렉토리 정리 중..."
+find $GIT_HOME/pipelines -type d -name "snapshot" -exec rm -rf {} \;
+
+# 3. uiinfo.json 파일 정리
+echo "uiinfo.json 파일 정리 중..."
+find $GIT_HOME/pipelines -name "uiinfo.json" -type f -delete
+
+# 4. 민감한 정보 검사
+echo "민감한 정보 검사 시작..."
+find $GIT_HOME/pipelines -name "*.json" -type f -exec grep -l "password\|secret\|credential\|token\|key\|auth" {} \;
+
+# 5. 임시 파일 정리
+echo "임시 파일 정리 중..."
+find $GIT_HOME/pipelines -name "*.tmp" -type f -delete
+find $GIT_HOME/pipelines -name "*.bak" -type f -delete
+
+echo "보안 정리 작업이 완료되었습니다." 

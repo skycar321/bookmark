@@ -1,0 +1,40 @@
+
+# 커밋 메시지가 제공되었는지 확인
+if [ -z "$1" ]; then
+    echo "사용법: $0 '커밋 메시지'"
+    exit 1
+fi
+
+COMMIT_MSG="$1"
+
+# 1. GitHub 디렉토리로 이동
+cd /data/github/di-streamsets
+
+# 2. dev 브랜치 pull
+git pull origin dev
+
+# 3. SDC 디렉토리로 이동
+cd /data/sdc
+
+# 4. 변경된 파일들을 git 경로로 복사
+cp -r pipelines/* /data/github/di-streamsets/pipelines/
+cp -r runinfo/* /data/github/di-streamsets/runinfo/
+cp -r sh/* /data/github/di-streamsets/sh/
+
+# 5. 보안 정리 스크립트 실행
+cd /data/github/di-streamsets
+./clean_security.sh
+
+# 6. git 상태 확인
+git status
+
+# 7. 변경사항 추가
+git add .
+
+# 8. 커밋
+git commit -m "$COMMIT_MSG"
+
+# 9. dev 브랜치에 푸시
+git push origin dev
+
+echo "Git 작업이 완료되었습니다." 

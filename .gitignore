@@ -1,0 +1,14 @@
+# 압축 파일
+*.zip
+*.z__
+
+# 시스템 파일
+.DS_Store
+Thumbs.db
+
+# IDE 설정 파일
+.vscode/
+.idea/
+
+# 로그 파일
+*.log 
